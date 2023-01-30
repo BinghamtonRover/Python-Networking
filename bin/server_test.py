@@ -1,3 +1,4 @@
-import lib.udp_server as server
+from network import UdpServer
 
-server.start_raw_server(8001)
+server = UdpServer(8001)
+server.start()

@@ -2,14 +2,6 @@ import socket
 
 BUFFER_SIZE = 1024
 
-def start_raw_server(port): 
-	server = UdpServer(port)
-	server.start()
-	# loop = asyncio.get_event_loop()
-	# thread = loop.create_datagram_endpoint(UdpServer, local_addr=("127.0.0.1", port))
-	# loop.run_until_complete(thread)
-	# loop.run_forever()
-
 class UdpServer:
 	def __init__(self, port):
 		self.port = port
