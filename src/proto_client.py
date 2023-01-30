@@ -1,6 +1,6 @@
 from .udp_client import UdpClient
 
-from generated.wrapper_pb2 import WrappedMessage
+from lib.network.generated.Protobuf.wrapper_pb2 import WrappedMessage
 
 class ProtoClient(UdpClient):
 	def send_message(self, name, message, address, port):

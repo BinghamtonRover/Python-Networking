@@ -1,5 +1,5 @@
 import time
-from network import UdpClient
+from lib.network import UdpClient
 
 client = UdpClient()
 

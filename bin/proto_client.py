@@ -1,7 +1,7 @@
 import time
 
-from network import ProtoClient
-from generated.drive_pb2 import DriveCommand
+from lib.network import ProtoClient
+from lib.network.generated.Protobuf.drive_pb2 import DriveCommand
 
 client = ProtoClient()
 
