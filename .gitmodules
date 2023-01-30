@@ -1,3 +1,0 @@
-[submodule "lib/proto"]
-	path = lib/proto
-	url = https://github.com/BinghamtonRover/Protobuf
