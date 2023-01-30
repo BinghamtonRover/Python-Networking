@@ -2,14 +2,6 @@ import socket
 
 BUFFER_SIZE = 1024
 
-def start_raw_server(port): 
-	server = UdpServer(port)
-	server.start()
-	# loop = asyncio.get_event_loop()
-	# thread = loop.create_datagram_endpoint(UdpServer, local_addr=("127.0.0.1", port))
-	# loop.run_until_complete(thread)
-	# loop.run_forever()
-
 class UdpServer:
 	def __init__(self, port):
 		self.port = port
@@ -23,10 +15,10 @@ class UdpServer:
 			while(True):
 				try: message, source = self.socket.recvfrom(BUFFER_SIZE)
 				except socket.timeout: continue
-				else: self.on_data_received(message, source)
+				else: self.on_data(message, source)
 		except KeyboardInterrupt: self.close()
 
-	def on_data_received(self, data, source): 
+	def on_data(self, data, source): 
 		print(f"Received message from {source}: {data}")
 
 	def close(self): 
