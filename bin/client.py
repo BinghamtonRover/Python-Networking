@@ -8,5 +8,6 @@ try:
 		client.send("localhost", 8001, b"Hello")
 		print("Sent a message")
 		time.sleep(1)
+except KeyboardInterrupt: pass
 finally: 
 	client.close()
