@@ -1,4 +1,3 @@
-import lib.network.udp_server as server
-import time
+import lib.udp_server as server
 
-server.start_server(8001)
+server.start_raw_server(8001)
