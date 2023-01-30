@@ -5,5 +5,6 @@ There is no lib folder here as this code is meant to be added as a Git submodule
 
 To generate Protobuf files:
 ```bash
-protoc -I=lib/proto --python_out=lib/generated lib/proto/*.proto
+mkdir generated  # if needed
+protoc -I=Protobuf --python_out=generated Protobuf/*.proto
 ```
