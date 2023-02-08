@@ -9,17 +9,19 @@ cv2.destroyAllWindows()
 
 msgFromClient       = "Hello UDP Server"
 bytesToSend         = str.encode(msgFromClient)
-serverAddressPort   = ("127.0.0.1", 9002)
+serverAddressPort   = ("127.0.0.1", 9004)
 bufferSize          = 65536
 
-print("1")
+camId = 1;
+
+
 # Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-print("2")
-cap = cv2.VideoCapture(0)
 
-print("3")
+cap = cv2.VideoCapture(camId)
+
+
 while(cap.isOpened()):
   # Capture frame-by-frame
   ret, frame = cap.read()
@@ -29,7 +31,17 @@ while(cap.isOpened()):
     #print(type(frameToSend))
     frame = cv2.resize(frame, (150, 150));
     encoded, buffer = cv2.imencode('.jpg',frame,[cv2.IMWRITE_JPEG_QUALITY,80])
+
+    #buffer[200] = camId + 100
     message = base64.b64encode(buffer)
+    print(type(buffer))
+    print(buffer)
+    #t = (camId).to_bytes(2, byteorder='big') + buffer
+    #print((camId).to_bytes(2, byteorder='big').join(message))
+    print("t: ")
+    #print(t)
+    print("done")
+    print("single frame \n \n")
     # Display the resulting frame
     #cv2.imshow('Frame',message)
     #print("buffer data type:")

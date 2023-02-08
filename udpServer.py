@@ -8,7 +8,7 @@ import numpy as np
 cv2.destroyAllWindows()
 
 localIP     = "127.0.0.1"
-localPort   = 9002
+localPort   = 9004
 bufferSize  = 65536
 
 msgFromServer       = "Hello UDP Client"
@@ -41,7 +41,16 @@ try:
     while(True):
         try:
             bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+            
             #message = bytesAddressPair[0]
+            #print("message:")
+            #print(message)
+            #camId = message[200]
+            #print("camId:")
+            #print(camId)
+            #k = (camId == message)
+            #print(k)
+            #print("done")
             #address = bytesAddressPair[1]
             #clientMsg = "{}".format(message)
             #clientIP  = "Client IP Address:{}".format(address)
