@@ -1,9 +1,6 @@
+import time
 import cv2
-from lib.network import VideoClient, ProtoServer
-
-class VideoServer(ProtoServer):
-	def on_message(self, wrapper, source): 
-		cv2.imshow(wrapper.data)
+from lib.network import VideoClient
 
 def init_camera():
 	camera = cv2.VideoCapture(1)
@@ -21,6 +18,10 @@ def read_frame(camera):
 
 if __name__ == '__main__':
 	camera = init_camera()
+	client = VideoClient(address="localhost", port=8001)
 	while True: 
 		frame = read_frame(camera)
-		cv2.imshow(camera)
+		client.send_frame("Video demo", frame)
+		print("Sent frame")
+		time.sleep(1/24)
+	camera.release()
