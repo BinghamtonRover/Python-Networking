@@ -13,21 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19Protobuf/electrical.proto\"^\n\x11\x45lectricalCommand\x12%\n\x12\x61utonomy_led_color\x18\x01 \x01(\x0e\x32\t.LedColor\x12\"\n\x0fpower_led_color\x18\x02 \x01(\x0e\x32\t.LedColor\"J\n\x11PowerSourceStatus\x12\x0f\n\x07\x63urrent\x18\x01 \x01(\x02\x12\x0f\n\x07voltage\x18\x02 \x01(\x02\x12\x13\n\x0btemperature\x18\x03 \x01(\x02\"v\n\x0e\x45lectricalData\x12\x1e\n\x02v5\x18\x01 \x01(\x0b\x32\x12.PowerSourceStatus\x12\x1f\n\x03v12\x18\x02 \x01(\x0b\x32\x12.PowerSourceStatus\x12#\n\x07\x62\x61ttery\x18\x03 \x01(\x0b\x32\x12.PowerSourceStatus*;\n\tPowerMode\x12\x18\n\x14POWER_MODE_UNDEFINED\x10\x00\x12\x08\n\x04IDLE\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x02*C\n\x08LedColor\x12\x17\n\x13LED_COLOR_UNDEFINED\x10\x00\x12\x07\n\x03RED\x10\x01\x12\n\n\x06YELLOW\x10\x02\x12\t\n\x05GREEN\x10\x03\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19Protobuf/electrical.proto\"^\n\x11\x45lectricalCommand\x12%\n\x12\x61utonomy_led_color\x18\x01 \x01(\x0e\x32\t.LedColor\x12\"\n\x0fpower_led_color\x18\x02 \x01(\x0e\x32\t.LedColor\"J\n\x11PowerSourceStatus\x12\x0f\n\x07\x63urrent\x18\x01 \x01(\x02\x12\x0f\n\x07voltage\x18\x02 \x01(\x02\x12\x13\n\x0btemperature\x18\x03 \x01(\x02\"\xe2\x01\n\x0e\x45lectricalData\x12\x12\n\nv5_current\x18\x01 \x01(\x02\x12\x12\n\nv5_voltage\x18\x02 \x01(\x02\x12\x16\n\x0ev5_temperature\x18\x03 \x01(\x02\x12\x13\n\x0bv12_current\x18\x04 \x01(\x02\x12\x13\n\x0bv12_voltage\x18\x05 \x01(\x02\x12\x17\n\x0fv12_temperature\x18\x06 \x01(\x02\x12\x17\n\x0f\x62\x61ttery_current\x18\x07 \x01(\x02\x12\x17\n\x0f\x62\x61ttery_voltage\x18\x08 \x01(\x02\x12\x1b\n\x13\x62\x61ttery_temperature\x18\t \x01(\x02*;\n\tPowerMode\x12\x18\n\x14POWER_MODE_UNDEFINED\x10\x00\x12\x08\n\x04IDLE\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x02*C\n\x08LedColor\x12\x17\n\x13LED_COLOR_UNDEFINED\x10\x00\x12\x07\n\x03RED\x10\x01\x12\n\n\x06YELLOW\x10\x02\x12\t\n\x05GREEN\x10\x03\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'Protobuf.electrical_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _POWERMODE._serialized_start=321
-  _POWERMODE._serialized_end=380
-  _LEDCOLOR._serialized_start=382
-  _LEDCOLOR._serialized_end=449
+  _POWERMODE._serialized_start=430
+  _POWERMODE._serialized_end=489
+  _LEDCOLOR._serialized_start=491
+  _LEDCOLOR._serialized_end=558
   _ELECTRICALCOMMAND._serialized_start=29
   _ELECTRICALCOMMAND._serialized_end=123
   _POWERSOURCESTATUS._serialized_start=125
   _POWERSOURCESTATUS._serialized_end=199
-  _ELECTRICALDATA._serialized_start=201
-  _ELECTRICALDATA._serialized_end=319
+  _ELECTRICALDATA._serialized_start=202
+  _ELECTRICALDATA._serialized_end=428
 # @@protoc_insertion_point(module_scope)

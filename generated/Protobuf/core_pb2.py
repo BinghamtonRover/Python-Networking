@@ -13,15 +13,17 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13Protobuf/core.proto\"\t\n\x07\x43onnect\"\x0c\n\nDisconnectb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13Protobuf/core.proto\"=\n\x07\x43onnect\x12\x17\n\x06sender\x18\x01 \x01(\x0e\x32\x07.Device\x12\x19\n\x08receiver\x18\x02 \x01(\x0e\x32\x07.Device\"\x0c\n\nDisconnect*d\n\x06\x44\x65vice\x12\x14\n\x10\x44\x45VICE_UNDEFINED\x10\x00\x12\r\n\tDASHBOARD\x10\x01\x12\x0e\n\nSUBSYSTEMS\x10\x02\x12\t\n\x05VIDEO\x10\x03\x12\x0c\n\x08\x41UTONOMY\x10\x04\x12\x0c\n\x08\x46IRMWARE\x10\x05\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'Protobuf.core_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
+  _DEVICE._serialized_start=100
+  _DEVICE._serialized_end=200
   _CONNECT._serialized_start=23
-  _CONNECT._serialized_end=32
-  _DISCONNECT._serialized_start=34
-  _DISCONNECT._serialized_end=46
+  _CONNECT._serialized_end=84
+  _DISCONNECT._serialized_start=86
+  _DISCONNECT._serialized_end=98
 # @@protoc_insertion_point(module_scope)
