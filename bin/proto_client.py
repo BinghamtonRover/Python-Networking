@@ -11,9 +11,9 @@ data3 = DriveCommand(right=0.5)
 
 try: 
 	while True: 
-		client.send_message("DriveCommand", data1)
-		client.send_message("DriveCommand", data2)
-		client.send_message("DriveCommand", data3)
+		client.send_message(data1)
+		client.send_message(data2)
+		client.send_message(data3)
 		print("Sent a message")
 		time.sleep(1)
 except KeyboardInterrupt: pass
