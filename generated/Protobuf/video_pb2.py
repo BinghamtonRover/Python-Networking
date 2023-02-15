@@ -13,17 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14Protobuf/video.proto\"B\n\x0c\x41\x64justCamera\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"B\n\x0c\x43\x61meraStatus\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"+\n\tVideoData\x12\x1e\n\x07\x63\x61meras\x18\x01 \x03(\x0b\x32\r.CameraStatusb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14Protobuf/video.proto\"B\n\x0c\x41\x64justCamera\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"B\n\x0c\x43\x61meraStatus\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"+\n\tVideoData\x12\x1e\n\x07\x63\x61meras\x18\x01 \x03(\x0b\x32\r.CameraStatus\"g\n\nVideoFrame\x12\r\n\x05width\x18\x01 \x01(\x05\x12\x0e\n\x06height\x18\x02 \x01(\x05\x12\x10\n\x08\x63hannels\x18\x03 \x01(\x05\x12\x19\n\x04name\x18\x04 \x01(\x0e\x32\x0b.CameraName\x12\r\n\x05\x66rame\x18\x05 \x01(\x0c*\xdd\x01\n\nCameraName\x12\x19\n\x15\x43\x41MERA_NAME_UNDEFINED\x10\x00\x12\x1b\n\x17\x43\x41MERA_NAME_ROVER_FRONT\x10\x01\x12\x1a\n\x16\x43\x41MERA_NAME_ROVER_REAR\x10\x02\x12\x18\n\x14\x43\x41MERA_NAME_ARM_BASE\x10\x03\x12\x1b\n\x17\x43\x41MERA_NAME_ARM_GRIPPER\x10\x04\x12 \n\x1c\x43\x41MERA_NAME_SCIENCE_CAROUSEL\x10\x05\x12\"\n\x1e\x43\x41MERA_NAME_SCIENCE_MICROSCOPE\x10\x06\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'Protobuf.video_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
+  _CAMERANAME._serialized_start=311
+  _CAMERANAME._serialized_end=532
   _ADJUSTCAMERA._serialized_start=24
   _ADJUSTCAMERA._serialized_end=90
   _CAMERASTATUS._serialized_start=92
   _CAMERASTATUS._serialized_end=158
   _VIDEODATA._serialized_start=160
   _VIDEODATA._serialized_end=203
+  _VIDEOFRAME._serialized_start=205
+  _VIDEOFRAME._serialized_end=308
 # @@protoc_insertion_point(module_scope)
