@@ -18,7 +18,7 @@ class VideoServer(ProtoServer):
 				try: message, source = self.socket.recvfrom(50000)
 				except socket.timeout: continue
 				else: self.on_data(message, source)
-				cv2.waitKey(1)
+				finally: cv2.waitKey(1)
 		except KeyboardInterrupt: self.close()
 
 	def close(self): 
@@ -33,6 +33,6 @@ class VideoServer(ProtoServer):
 			frame = cv2.imdecode(array, 1)
 			cv2.imshow(name, frame)
 
-server = VideoServer(8001)
+server = VideoServer(8009)
 try: server.start()
 finally: server.close()

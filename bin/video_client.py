@@ -1,68 +1,58 @@
-import time
 import cv2
-from lib.network import VideoClient
 import threading
-import subprocess
+import time
+
+from lib.network import VideoClient
 from lib.network.generated.Protobuf.video_pb2 import *
 
+RESOLUTION = (640, 280)
+DELAY = 1/24
+cv2.setLogLevel(0)  # no logging from OpenCV
 
-class camThread(threading.Thread):
-    def __init__(self, previewName, camID):
-        threading.Thread.__init__(self)
-        self.previewName = previewName
-        self.camID = camID
-    def run(self):
-        print("Starting " + self.previewName)
-        camPreview(self.previewName, self.camID)
+class CameraThread(threading.Thread):
+	def __init__(self, name, id, client):
+		super().__init__()
+		self.name = name
+		self.id = id
+		self.camera = cv2.VideoCapture(id)
+		self.client = client
+		# self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION[0])
+		# self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION[1])
 
-def camPreview(previewName, camID):
-    cam = cv2.VideoCapture(camID)
-    #Set to lower resolution for shared USB bus
-    cam.set(3,640)
-    cam.set(4,280)
-    if cam.isOpened():  # try to get the first frame
-        rval, frame = cam.read()
-    else:
-        rval = False
+	def can_read(self): 
+		return self.camera.isOpened()
 
-    while rval:
-        rval, frame = cam.read()
-        client.send_frame(camID, frame)
-        print(f"Sent frame {camID}")
-    cam.release()
-    
-    
-#def init_camera(id):
-#	camera = cv2.VideoCapture(id)
-#	if not camera.isOpened(): 
-#		print("[Error] Cannot open camera")
-#		quit()
-#	return camera
+	def run(self):
+		print("Starting loop")
+		while True:
+			success, frame = self.camera.read()
+			if not success: 
+				print(f"Could not read frame for camera {self.id}")
+				return
+			self.client.send_frame(self.id, frame)
+			print(f"Sent frame for camera {self.id}")
+			time.sleep(DELAY)
 
-def read_frame(camera): 
-	ret, frame = camera.read()
-	if not ret: 
-		print("[Error] Cannot receive frame")
-		quit()
-	return frame
+	def close(self): 
+		print(f"Closing camera {self.id}")
+		self.camera.release()
+
+
+def get_threads(): 
+	threads = []
+	client = VideoClient(address="192.168.1.10", port=8009)
+	for index in range(8):  # 8 is a reasonable amount of cameras
+		thread = CameraThread(f"Camera {index}", index, client)
+		if thread.can_read(): threads.append(thread)
+	return threads
 
 if __name__ == '__main__':
 	print("Initializing...")
-	#camera = init_camera(0)
-	#cam2 = init_camera(1)
-	#cam3 = init_camera(2)
-	thread1 = camThread("Camera 1", 0)
-	thread2 = camThread("Camera 2", 2)
-	client = VideoClient(address="localhost", port=8001)
-	thread1.start()
-	thread2.start()
-	#while True: 
-	#	frame1 = read_frame(camera)
-	#	client.send_frame(CameraName.CAMERA_NAME_ROVER_FRONT, frame1)
-		#frame2 = read_frame(cam2)
-		#client.send_frame(CameraName.CAMERA_NAME_ROVER_REAR, frame2)
-		#frame3 = read_frame(cam3)
-		#client.send_frame(CameraName.CAMERA_NAME_ARM_BASE, frame3)
-		#print("Sent frame")
-	#	time.sleep(1/12)
-	#camera.release()
+	threads = get_threads()
+	if not threads: quit("No workable camera detected")
+	print(f"Using cameras {[thread.id for thread in threads]}")
+	try: 
+		for thread in threads: thread.start()
+		for thread in threads: thread.join()
+	finally: 
+		for thread in threads: thread.close()

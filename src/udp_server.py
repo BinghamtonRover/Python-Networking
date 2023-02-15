@@ -7,7 +7,7 @@ class UdpServer:
 		self.port = port
 		self.socket = socket.socket(family = socket.AF_INET, type = socket.SOCK_DGRAM)
 		self.socket.bind(("0.0.0.0", port))
-		self.socket.settimeout(1)
+		self.socket.settimeout(0.1)
 
 	def start(self):
 		print(f"Server started on port {self.port}")
