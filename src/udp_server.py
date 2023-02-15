@@ -6,7 +6,7 @@ class UdpServer:
 	def __init__(self, port):
 		self.port = port
 		self.socket = socket.socket(family = socket.AF_INET, type = socket.SOCK_DGRAM)
-		self.socket.bind(("localhost", port))
+		self.socket.bind(("0.0.0.0", port))
 		self.socket.settimeout(1)
 
 	def start(self):
