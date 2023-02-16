@@ -14,9 +14,12 @@ class UdpServer:
 		try:
 			while(True):
 				try: message, source = self.socket.recvfrom(BUFFER_SIZE)
-				except socket.timeout: continue
+				except socket.timeout: self.on_loop()
 				else: self.on_data(message, source)
 		except KeyboardInterrupt: self.close()
+
+	# Override this to insert your own logic in between waiting
+	def on_loop(self): pass
 
 	def on_data(self, data, source): 
 		print(f"Received message from {source}: {data}")
