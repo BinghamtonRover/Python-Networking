@@ -13,8 +13,9 @@ class UdpServer:
 		try:
 			while(True):
 				try: message, source = self.socket.recvfrom(self.buffer)
-				except socket.timeout: self.on_loop()
+				except socket.timeout: continue
 				else: self.on_data(message, source)
+				finally: self.on_loop()
 		except KeyboardInterrupt: self.close()
 
 	# Override this to insert your own logic in between waiting
