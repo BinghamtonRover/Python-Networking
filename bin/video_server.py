@@ -25,6 +25,6 @@ class VideoServer(ProtoServer):
 			frame = cv2.imdecode(array, 1)
 			cv2.imshow(name, frame)
 
-server = VideoServer(8009)
+server = VideoServer(8009, buffer=65_527)
 try: server.start()
 finally: server.close()
