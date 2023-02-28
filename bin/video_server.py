@@ -10,16 +10,8 @@ from lib.network import ProtoServer
 from lib.network.generated.Protobuf.video_pb2 import *
 
 class VideoServer(ProtoServer):
-	# Overriding to add cv2.waitKey
-	def start(self):
-		print(f"Server started on port {self.port}")
-		try:
-			while(True):
-				try: message, source = self.socket.recvfrom(50000)
-				except socket.timeout: continue
-				else: self.on_data(message, source)
-				finally: cv2.waitKey(1)
-		except KeyboardInterrupt: self.close()
+	# Make sure waitKey is called every once in a while
+	def on_loop(self): cv2.waitKey(1)
 
 	def close(self): 
 		cv2.destroyAllWindows()
@@ -33,6 +25,6 @@ class VideoServer(ProtoServer):
 			frame = cv2.imdecode(array, 1)
 			cv2.imshow(name, frame)
 
-server = VideoServer(8009)
+server = VideoServer(8009, buffer=65_527)
 try: server.start()
 finally: server.close()
