@@ -5,7 +5,7 @@ from multiprocessing import Process
 from lib.network import VideoClient
 from lib.network.generated.Protobuf.video_pb2 import *
 
-RESOLUTION = (450, 450)
+RESOLUTION = (400, 400)
 cv2.setLogLevel(0)  # no logging from OpenCV
 
 CAMERAS = [
@@ -26,6 +26,8 @@ class CameraThread(Process):
 		super().__init__()
 		self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION[0])
 		self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION[1])
+		# self.camera.set(cv2.CAP_PROP_FOCUS, 250)
+		self.camera.set(cv2.CAP_PROP_AUTOFOCUS, 1)
 
 	def can_read(self): 
 		if not self.camera.isOpened(): return False
@@ -42,7 +44,7 @@ class CameraThread(Process):
 					print(f"Could not read frame for camera {self.id}")
 					return
 				self.client.send_frame(self.camera_name, frame)
-				time.sleep(1/60)
+				time.sleep(1/24)
 		except KeyboardInterrupt: pass
 
 	def close(self): 
@@ -57,7 +59,6 @@ def get_threads():
 	client = VideoClient(address="192.168.1.10", port=8009)
 	cams = 0
 	for index in range(10):
-		print(len(threads))
 		thread = CameraThread(CAMERAS[len(threads)], index, client)
 		if thread.can_read(): threads.append(thread)
 	return threads
