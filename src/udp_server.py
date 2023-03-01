@@ -1,4 +1,5 @@
 import socket
+import time
 
 class UdpServer:
 	def __init__(self, port, buffer=1024):
@@ -13,8 +14,8 @@ class UdpServer:
 		try:
 			while(True):
 				try: message, source = self.socket.recvfrom(self.buffer)
-				except socket.timeout: continue
-				else: self.on_data(message, source)
+				except socket.timeout: pass
+				else: self.on_data(message, source);
 				finally: self.on_loop()
 		except KeyboardInterrupt: self.close()
 
