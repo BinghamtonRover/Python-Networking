@@ -11,6 +11,7 @@ class UdpClient:
 		if (port is None): port = self.port
 		if (address is None or port is None):
 			raise ValueError("No port or address specified")
+		# print(f"Sending packet to {address}:{port}")
 		self.udp_client_socket.sendto(data, (address, port))
 
 	def close(self):
