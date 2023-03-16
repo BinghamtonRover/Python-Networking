@@ -5,22 +5,36 @@ from multiprocessing import Process
 from lib.network import VideoClient
 from lib.network.generated.Protobuf.video_pb2 import *
 
-RESOLUTION = (450, 450)
+RESOLUTION = (400, 400)
 cv2.setLogLevel(0)  # no logging from OpenCV
+
+CAMERAS = [
+	CameraName.CAMERA_NAME_ROVER_FRONT, 
+	CameraName.CAMERA_NAME_ROVER_REAR,
+	CameraName.CAMERA_NAME_ARM_BASE,
+	CameraName.CAMERA_NAME_ARM_GRIPPER,
+	CameraName.CAMERA_NAME_UNDEFINED
+]
 
 class CameraThread(Process):
 	def __init__(self, name, id, client):
 		print(f"Initializing camera {id}")
-		self.name = name
+		self.camera_name = name
 		self.id = id
 		self.camera = cv2.VideoCapture(id)
 		self.client = client
 		super().__init__()
 		self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION[0])
 		self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION[1])
+		# self.camera.set(cv2.CAP_PROP_FOCUS, 250)
+		self.camera.set(cv2.CAP_PROP_AUTOFOCUS, 1)
 
 	def can_read(self): 
-		return self.camera.isOpened()
+		if not self.camera.isOpened(): return False
+		success, frame = self.camera.read()
+		if not success: 
+			print(f"Camera {self.id} is open but not responding")
+		return success
 
 	def run(self):
 		try:
@@ -29,7 +43,8 @@ class CameraThread(Process):
 				if not success: 
 					print(f"Could not read frame for camera {self.id}")
 					return
-				self.client.send_frame(self.id, frame)
+				self.client.send_frame(self.camera_name, frame)
+				time.sleep(1/24)
 		except KeyboardInterrupt: pass
 
 	def close(self): 
@@ -42,8 +57,9 @@ class CameraThread(Process):
 def get_threads(): 
 	threads = []
 	client = VideoClient(address="192.168.1.10", port=8009)
-	for index in [0, 2, 4, 6]:
-		thread = CameraThread(f"Camera {index}", index, client)
+	cams = 0
+	for index in range(10):
+		thread = CameraThread(CAMERAS[len(threads)], index, client)
 		if thread.can_read(): threads.append(thread)
 	return threads
 
