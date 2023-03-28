@@ -1,4 +1,4 @@
-from lib.network import UdpServer
+from src import UdpSocket
 
-server = UdpServer(8001)
-server.start()
+server = UdpSocket(8001)
+server.listen()

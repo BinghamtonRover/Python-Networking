@@ -6,18 +6,24 @@ import cv2
 import numpy
 import socket
 
-from lib.network import ProtoServer
-from lib.network.generated.Protobuf.video_pb2 import *
+from src import ProtoSocket
+from src.generated.Protobuf.video_pb2 import *
+from src.generated.Protobuf.core_pb2 import *
 
-class VideoServer(ProtoServer):
+class VideoServer(ProtoSocket):
+	def __init__(self, port): 
+		super().__init__(port, device=Device.DASHBOARD, buffer=65_527)
+
 	# Make sure waitKey is called every once in a while
 	def on_loop(self): cv2.waitKey(1)
 
+	# Override of ProtoSocket.close()
 	def close(self): 
 		cv2.destroyAllWindows()
 		super().close()
 
-	def on_message(self, wrapper, source): 
+	# Override of ProtoSocket.on_message
+	def on_message(self, wrapper): 
 		if wrapper.name == VideoFrame.DESCRIPTOR.name:
 			data = VideoFrame.FromString(wrapper.data)
 			array = numpy.frombuffer(data.frame, dtype="uint8")
@@ -25,6 +31,5 @@ class VideoServer(ProtoServer):
 			frame = cv2.imdecode(array, 1)
 			cv2.imshow(name, frame)
 
-server = VideoServer(8009, buffer=65_527)
-try: server.start()
-finally: server.close()
+server = VideoServer(8001)
+server.listen()

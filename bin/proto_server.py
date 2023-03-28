@@ -1,4 +1,5 @@
-from lib.network import ProtoServer
+from src import ProtoSocket
+from src.generated.Protobuf.core_pb2 import *
 
-server = ProtoServer(8001)
-server.start()
+server = ProtoSocket(port=8001, device=Device.DASHBOARD)
+server.listen()
