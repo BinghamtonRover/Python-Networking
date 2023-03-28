@@ -1,101 +1,129 @@
+from typing import override
 import time
 
 from .udp_server import UdpServer
 
 from lib.network.generated.Protobuf.wrapper_pb2 import WrappedMessage
 from lib.network.generated.Protobuf.core_pb2 import *
-from lib.network.generated.Protobuf.autonomy_pb2 import *
-
 
 heartbeat_interval = 1
 
 class ProtoServer(UdpServer):
-        def __init__(self, port, device, client = None):
-            self.client = client
-            self.device = device
-            self.received_handshake = False
-            self.last_handshake_check = time.time()
-            self.status = RoverSatatus.MANUAL
-            super().__init__(port)
+	"""A UDP server that handles incoming data in Protobuf format.
 
-        def is_connected(self): return self.client.address is not None
+	This class is capable of understanding structured data, so it is also responsible for monitoring
+	the connection to the dashboard. The dashboard will send three types of messages: 
+	1) normal commands, to be handled by the specific server (for example, "enable a camera")
+	2) handshake messages, which require some sort of confirmation response from the server.
+	3) heartbeat messages, periodic handshakes to confirm that the servers are still connected.
 
-        #Overriden from super class UdpServer -- do not rename
-        def on_loop(self):
-		now = time.time()
-		if (now - self.last_handshake_check < heartbeat_interval): return
-		# detect dropped connections
-		if not self.received_handshake: 
-			if self.is_connected(): self.on_disconnect()
-		else: self.received_handshake = False
-		self.last_handshake_check = time.time()        
-    
-        def on_disconnect(self): 
-		print("Handshake not received. Assuming Dashboard has disconnected")
-		self.client.address = None
-		#PATCH NOTE! - removed line 'self.can.stop_driving()'
-		'''In the can specific version of heartbeat enabled ProtoServer the above line was included.
-                This suggests that each device should have their own sequence of shutdown steps
-                '''
-		self.device_shutdown()
+	The [Connect] message serves as both the handshake and the heartbeat. A [Connect] message indicates
+	who initiated the handshake and who it was intended for. The recipient is then to send another
+	[Connect] message in response, but with the updated [sender] and [receiver] fields. The [Connect]
+	message is sent periodically, and when the server goes [heartbeat_interval] seconds without one,
+	it assumes the dashboard has disconnected and invokes [on_disconnect].
 
-	def device_shutdown(self):
-            pass
+	While the rover's servers are configured with static IP addresses, the user's device (running the
+	dashboard), is most likely configured with a dynamic IP address (ie, DHCP). To work around this,
+	the [Connect] handshake allows the dashboard to inform the rover about its IP address, which it
+	then saves and subsequently uses to send messages to the dashboard.
+	"""
+	def __init__(self, port, device, client = None):
+		self.client = client
+		self.device = device
+		self.received_heartbeat = False
+		self.last_heartbeat_check = time.time()
+		super().__init__(port)
 
-        #Overriden from super class UdpServer -- do not rename
-	def on_data(self, data, source): 
-		wrapper = WrappedMessage.FromString(data)
-		self.on_message(wrapper, source)
-		
-        #respond to heartbeats
-	def send_heartbeat(self): 
-		response = Connect(sender=self.device, receiver=Device.DASHBOARD)
-		self.client.send_message(response)
-		self.received_handshake = True
+	def is_connected(self): return self.client.address is not None
 
-        
-	def on_handshake(self, handshake, source): 
-		"""Decides what to do when a heartbeat message has been received
-		- If the heartbeat was meant for another device, log it and ignore it
-		- If we are not connected to any dashboard, connect to it and respond
-		- If we are already connected to another dashboard, ignore it
-		- If it is our dashboard, respond to it
+	@override
+	def on_loop(self):
+		"""Check if [heartbeat_interval] seconds have passed since the last heartbeat message.
+
+		If a dashboard had previously connected to this server but failed to send a heartbeat message,
+		then this invokes [on_disconnect] to warn the server that the dashboard has disconnected.
 		"""
-		if handshake.receiver != self.device:  # not meant for us
-			print(f"Received a misaddressed handshake intended for {handshake.receiever}, sent by {handshake.sender}")
-		elif not self.is_connected():  # new dashboard, let's connect
+		now = time.time()
+		if (now - self.last_heartbeat_check < heartbeat_interval): return
+		elif self.received_heartbeat: self.received_heartbeat = False
+		elif self.is_connected(): 
+			print("Heartbeat not received. Assuming Dashboard has disconnected")
+			self.client.address = None
+			self.on_disconnect()
+		self.last_heartbeat_check = time.time()
+		
+	def on_disconnect(self): 
+		"""Invoked when the dashboard fails to send a heartbeat message
+
+		Use this method to shut down anything that might be dangerous without a human operator. For 
+		example, the subsystems server should stop the drive system so the rover doesn't drive away.
+		"""
+		pass
+
+	@override
+	def on_data(self, data, source): 
+		"""Handles incoming data in Protobuf format.
+
+		1) If the message is a heartbeat message, respond to it.
+		2) If the message is a settings message, handle it.
+		3) Allow the implementation to handle other messages
+		"""
+		wrapper = WrappedMessage.FromString(data)
+		if wrapper.name == Connect.DESCRIPTOR.name:  # (1)
+			heartbeat = Connect.FromString(wrapper.data)
+			self.on_heartbeat(heartbeat, source)
+		elif wrapper.name == UpdateSetting.DESCRIPTOR.name:  # (2) 
+			settings = UpdateSetting.FromString(wrapper.data)
+			self.update_settings(settings)
+		else:  # (3)
+			self.on_message(wrapper)
+
+	def on_heartbeat(self, heartbeat, source): 
+		"""Decides what to do when a heartbeat message has been received
+
+		1) If the heartbeat was meant for another device, log it and ignore it
+		2) If it is our dashboard, respond to it
+		3) If we are already connected to another dashboard, log it and ignore it
+		4) If we are not connected to any dashboard, remember its IP and port, then respond
+		"""
+		if heartbeat.receiver != self.device:  # (1)
+			print(f"Received a misaddressed heartbeat intended for {heartbeat.receiever}, sent by {heartbeat.sender}")
+			return
+
+		if self.is_connected():
+			if self.client.address == source[0]:  # (2)
+				self.send_heartbeat()
+			else:  # (3)
+				print(f"This server is still connected to {self.client.address}, but got a heartbeat from {source[0]}")
+		else:  # (4)
 			self.client.address = source[0]
 			self.client.port = source[1]
 			self.send_heartbeat()
-		elif self.client.address != source[0]:
-			# We're already connected to a dashboard, and a new one tried connecting -- ignore
-			return
-		else:  # heartbeat from the already-connected dashboard -- respond with a heartbeat back
-			self.send_heartbeat()
 
-        #detect regular messages and handle then however we want
-	# This function comes from ProtoServer -- do not rename!
-        def on_message(self, wrapper, source): 
-		if wrapper.name == Connect.DESCRIPTOR.name: 
-			handshake = Connect.FromString(wrapper.data)
-			self.on_handshake(handshake, source)
-		elif wrapper.name == UpdateSetting.DESCRIPTOR.name: 
-			settings = UpdateSetting.FromString(wrapper.data)
-			print(f"Received a request to update status={settings.status}")
-			self.client.send_message(settings)  # must send in return
-			self.status = settings.status
-			if settings.status == RoverStatus.AUTONOMOUS:
-				self.client.send_message(AutonomyCommand(enable=True), address="192.168.1.30", port=8006)
-			elif settings.status == RoverStatus.MANUAL:
-				self.client.send_message(AutonomyCommand(enable=False), address="192.168.1.30", port=8006)
+	def send_heartbeat(self): 
+		"""Sends a heartbeat response to the dashboard."""
+		response = Connect(sender=self.device, receiver=Device.DASHBOARD)
+		self.client.send_message(response)
+		self.received_heartbeat = True  # for the next [on_loop] check
 
-		else: 
-			# print(f"Received UDP message {wrapper.name}")
-			#PATCH NOTE! removed line - 'self.can.send(id, wrapper.data)'
-			'''In the can specific version of heartbeat enabled ProtoServer the above line was included.
-                        This suggests that each device should have their own message handling method.
-                        '''
-			self.handle_message(wrapper.data)
+	def update_settings(self, settings): 
+		"""Handles the [UpdateSettings] handshake.
 
-        def handle_message(self):
-                pass
+		To ensure critical settings are in fact updated, the server must respond with its settings after
+		making the requested change. That way, the dashboard can perform sanity checks and warn the user.
+		""" 
+		self.client.send_message(settings)
+		self.status = settings.status
+		if settings.status == RoverStatus.AUTONOMOUS:
+			self.client.send_message(AutonomyCommand(enable=True), address="192.168.1.30", port=8006)
+		elif settings.status == RoverStatus.MANUAL:
+			self.client.send_message(AutonomyCommand(enable=False), address="192.168.1.30", port=8006)
+	
+	def on_message(self, wrapper): 
+		"""Invoked when a generic command has been received.
+
+		The [wrapper] argument is a [WrappedMessage] message, which contains the name of the contained
+		message and its binary payload, which can then be parsed in a server that overrides this method.
+		"""
+		pass
