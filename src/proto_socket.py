@@ -34,6 +34,7 @@ class ProtoSocket(UdpSocket):
 		self.device = device
 		self.received_heartbeat = False
 		self.last_heartbeat_check = time.time()
+		self.settings = None
 		super().__init__(port, destination, buffer=buffer)
 
 	def is_connected(self): return self.destination is not None
@@ -117,7 +118,7 @@ class ProtoSocket(UdpSocket):
 		making the requested change. That way, the dashboard can perform sanity checks and warn the user.
 		""" 
 		self.send_message(settings)
-		self.status = settings.status
+		self.settings = settings
 
 	def on_message(self, wrapper): 
 		"""Invoked when a generic command has been received.
