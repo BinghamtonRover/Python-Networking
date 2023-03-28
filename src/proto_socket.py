@@ -1,15 +1,17 @@
-from typing import override
 import time
 
-from .udp_server import UdpServer
-
-from lib.network.generated.Protobuf.wrapper_pb2 import WrappedMessage
-from lib.network.generated.Protobuf.core_pb2 import *
+from .udp_socket import UdpSocket
+from .generated.Protobuf.wrapper_pb2 import *
+from .generated.Protobuf.core_pb2 import *
 
 heartbeat_interval = 1
 
-class ProtoServer(UdpServer):
-	"""A UDP server that handles incoming data in Protobuf format.
+class ProtoSocket(UdpSocket): 
+	"""A UDP socket that handles incoming data in Protobuf format.
+
+	Since Protobuf messages cannot self-identify, all messages are wrapped in a [WrappedMessage] class
+	that contains the name of the underlying message and its binary payload, which can then be parsed
+	by a subclass that overrides [on_message].
 
 	This class is capable of understanding structured data, so it is also responsible for monitoring
 	the connection to the dashboard. The dashboard will send three types of messages: 
@@ -28,16 +30,19 @@ class ProtoServer(UdpServer):
 	the [Connect] handshake allows the dashboard to inform the rover about its IP address, which it
 	then saves and subsequently uses to send messages to the dashboard.
 	"""
-	def __init__(self, port, device, client = None):
-		self.client = client
+	def __init__(self, port, device, destination = None, buffer=None):
 		self.device = device
 		self.received_heartbeat = False
 		self.last_heartbeat_check = time.time()
-		super().__init__(port)
+		super().__init__(port, destination, buffer=buffer)
 
-	def is_connected(self): return self.client.address is not None
+	def is_connected(self): return self.destination is not None
 
-	@override
+	def send_message(self, message):
+		"""Wraps a message and sends it to [destination]."""
+		wrapper = WrappedMessage(name=message.DESCRIPTOR.name, data=message.SerializeToString())
+		self.send(wrapper.SerializeToString())
+
 	def on_loop(self):
 		"""Check if [heartbeat_interval] seconds have passed since the last heartbeat message.
 
@@ -49,7 +54,7 @@ class ProtoServer(UdpServer):
 		elif self.received_heartbeat: self.received_heartbeat = False
 		elif self.is_connected(): 
 			print("Heartbeat not received. Assuming Dashboard has disconnected")
-			self.client.address = None
+			self.destination = None
 			self.on_disconnect()
 		self.last_heartbeat_check = time.time()
 		
@@ -61,7 +66,6 @@ class ProtoServer(UdpServer):
 		"""
 		pass
 
-	@override
 	def on_data(self, data, source): 
 		"""Handles incoming data in Protobuf format.
 
@@ -92,19 +96,18 @@ class ProtoServer(UdpServer):
 			return
 
 		if self.is_connected():
-			if self.client.address == source[0]:  # (2)
+			if self.destination == source:  # (2)
 				self.send_heartbeat()
 			else:  # (3)
-				print(f"This server is still connected to {self.client.address}, but got a heartbeat from {source[0]}")
+				print(f"This server is still connected to {self.destination}, but got a heartbeat from {source[0]}")
 		else:  # (4)
-			self.client.address = source[0]
-			self.client.port = source[1]
+			self.destination = source
 			self.send_heartbeat()
 
 	def send_heartbeat(self): 
 		"""Sends a heartbeat response to the dashboard."""
 		response = Connect(sender=self.device, receiver=Device.DASHBOARD)
-		self.client.send_message(response)
+		self.send_message(response)
 		self.received_heartbeat = True  # for the next [on_loop] check
 
 	def update_settings(self, settings): 
@@ -113,17 +116,13 @@ class ProtoServer(UdpServer):
 		To ensure critical settings are in fact updated, the server must respond with its settings after
 		making the requested change. That way, the dashboard can perform sanity checks and warn the user.
 		""" 
-		self.client.send_message(settings)
+		self.send_message(settings)
 		self.status = settings.status
-		if settings.status == RoverStatus.AUTONOMOUS:
-			self.client.send_message(AutonomyCommand(enable=True), address="192.168.1.30", port=8006)
-		elif settings.status == RoverStatus.MANUAL:
-			self.client.send_message(AutonomyCommand(enable=False), address="192.168.1.30", port=8006)
-	
+
 	def on_message(self, wrapper): 
 		"""Invoked when a generic command has been received.
 
 		The [wrapper] argument is a [WrappedMessage] message, which contains the name of the contained
 		message and its binary payload, which can then be parsed in a server that overrides this method.
 		"""
-		pass
+		print(f"Received a {wrapper.name} message: {wrapper.data}")

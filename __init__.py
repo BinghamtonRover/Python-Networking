@@ -1,2 +1,2 @@
-from .generated import Protobuf
 from .src import *
+from .src.generated.Protobuf.core_pb2 import *
