@@ -1,5 +1,3 @@
-from .udp_client import *
-from .udp_server import *
-from .proto_client import *
-from .proto_server import *
+from .udp_socket import *
+from .proto_socket import *
 from .video_client import *
