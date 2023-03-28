@@ -30,7 +30,7 @@ class ProtoSocket(UdpSocket):
 	the [Connect] handshake allows the dashboard to inform the rover about its IP address, which it
 	then saves and subsequently uses to send messages to the dashboard.
 	"""
-	def __init__(self, port, device, destination = None, buffer=None):
+	def __init__(self, port, device, destination = None, buffer=1024):
 		self.device = device
 		self.received_heartbeat = False
 		self.last_heartbeat_check = time.time()
