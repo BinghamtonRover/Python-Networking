@@ -13,23 +13,23 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0bvideo.proto\"Q\n\x0c\x41\x64justCamera\x12\x19\n\x04name\x18\x01 \x01(\x0e\x32\x0b.CameraName\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"Q\n\x0c\x43\x61meraStatus\x12\x19\n\x04name\x18\x01 \x01(\x0e\x32\x0b.CameraName\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"+\n\tVideoData\x12\x1e\n\x07\x63\x61meras\x18\x01 \x03(\x0b\x32\r.CameraStatus\"6\n\x0cVideoCommand\x12\x13\n\x0b\x63ompression\x18\x01 \x01(\x05\x12\x11\n\tframerate\x18\x02 \x01(\x02\"6\n\nVideoFrame\x12\x19\n\x04name\x18\x04 \x01(\x0e\x32\x0b.CameraName\x12\r\n\x05\x66rame\x18\x05 \x01(\x0c*\x95\x01\n\nCameraName\x12\x19\n\x15\x43\x41MERA_NAME_UNDEFINED\x10\x00\x12\x0f\n\x0bROVER_FRONT\x10\x01\x12\x0e\n\nROVER_REAR\x10\x02\x12\x0c\n\x08\x41RM_BASE\x10\x03\x12\x0f\n\x0b\x41RM_GRIPPER\x10\x04\x12\x14\n\x10SCIENCE_CAROUSEL\x10\x05\x12\x16\n\x12SCIENCE_MICROSCOPE\x10\x06\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0bvideo.proto\"M\n\x0c\x41\x64justCamera\x12\x19\n\x04name\x18\x01 \x01(\x0e\x32\x0b.CameraName\x12\x0e\n\x06\x65nable\x18\x02 \x01(\x08\x12\x12\n\nresolution\x18\x03 \x01(\x05\"g\n\x0c\x43\x61meraStatus\x12\x19\n\x04name\x18\x01 \x01(\x0e\x32\x0b.CameraName\x12\x14\n\x0cis_connected\x18\x02 \x01(\x08\x12\x12\n\nis_enabled\x18\x03 \x01(\x08\x12\x12\n\nresolution\x18\x04 \x01(\x05\"+\n\tVideoData\x12\x1e\n\x07\x63\x61meras\x18\x01 \x03(\x0b\x32\r.CameraStatus\"6\n\x0cVideoCommand\x12\x13\n\x0b\x63ompression\x18\x01 \x01(\x05\x12\x11\n\tframerate\x18\x02 \x01(\x02\"6\n\nVideoFrame\x12\x19\n\x04name\x18\x04 \x01(\x0e\x32\x0b.CameraName\x12\r\n\x05\x66rame\x18\x05 \x01(\x0c*\x95\x01\n\nCameraName\x12\x19\n\x15\x43\x41MERA_NAME_UNDEFINED\x10\x00\x12\x0f\n\x0bROVER_FRONT\x10\x01\x12\x0e\n\nROVER_REAR\x10\x02\x12\x0c\n\x08\x41RM_BASE\x10\x03\x12\x0f\n\x0b\x41RM_GRIPPER\x10\x04\x12\x14\n\x10SCIENCE_CAROUSEL\x10\x05\x12\x16\n\x12SCIENCE_MICROSCOPE\x10\x06\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'video_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _CAMERANAME._serialized_start=339
-  _CAMERANAME._serialized_end=488
+  _CAMERANAME._serialized_start=357
+  _CAMERANAME._serialized_end=506
   _ADJUSTCAMERA._serialized_start=15
-  _ADJUSTCAMERA._serialized_end=96
-  _CAMERASTATUS._serialized_start=98
-  _CAMERASTATUS._serialized_end=179
-  _VIDEODATA._serialized_start=181
-  _VIDEODATA._serialized_end=224
-  _VIDEOCOMMAND._serialized_start=226
-  _VIDEOCOMMAND._serialized_end=280
-  _VIDEOFRAME._serialized_start=282
-  _VIDEOFRAME._serialized_end=336
+  _ADJUSTCAMERA._serialized_end=92
+  _CAMERASTATUS._serialized_start=94
+  _CAMERASTATUS._serialized_end=197
+  _VIDEODATA._serialized_start=199
+  _VIDEODATA._serialized_end=242
+  _VIDEOCOMMAND._serialized_start=244
+  _VIDEOCOMMAND._serialized_end=298
+  _VIDEOFRAME._serialized_start=300
+  _VIDEOFRAME._serialized_end=354
 # @@protoc_insertion_point(module_scope)
