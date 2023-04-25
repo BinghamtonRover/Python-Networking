@@ -35,6 +35,7 @@ class ProtoSocket(UdpSocket):
 		self.received_heartbeat = False
 		self.last_heartbeat_check = time.time()
 		self.settings = None
+		self.destination = destination
 		super().__init__(port, destination, buffer=buffer)
 
 	def is_connected(self): return self.destination is not None
