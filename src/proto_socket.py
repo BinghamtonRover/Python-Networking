@@ -39,10 +39,10 @@ class ProtoSocket(UdpSocket):
 
 	def is_connected(self): return self.destination is not None
 
-	def send_message(self, message):
+	def send_message(self, message, destination=None):
 		"""Wraps a message and sends it to [destination]."""
 		wrapper = WrappedMessage(name=message.DESCRIPTOR.name, data=message.SerializeToString())
-		self.send(wrapper.SerializeToString())
+		self.send(wrapper.SerializeToString(), destination=destination)
 
 	def on_loop(self):
 		"""Check if [heartbeat_interval] seconds have passed since the last heartbeat message.
@@ -93,7 +93,7 @@ class ProtoSocket(UdpSocket):
 		4) If we are not connected to any dashboard, remember its IP and port, then respond
 		"""
 		if heartbeat.receiver != self.device:  # (1)
-			print(f"Received a misaddressed heartbeat intended for {heartbeat.receiever}, sent by {heartbeat.sender}")
+			print(f"Received a misaddressed heartbeat: {heartbeat}")
 			return
 
 		if self.is_connected():
@@ -103,6 +103,7 @@ class ProtoSocket(UdpSocket):
 				print(f"This server is still connected to {self.destination}, but got a heartbeat from {source[0]}")
 		else:  # (4)
 			self.destination = source
+			self.on_connect(source)
 			self.send_heartbeat()
 
 	def send_heartbeat(self): 
@@ -127,3 +128,7 @@ class ProtoSocket(UdpSocket):
 		message and its binary payload, which can then be parsed in a server that overrides this method.
 		"""
 		print(f"Received a {wrapper.name} message: {wrapper.data}")
+
+	def on_connect(self, source): 
+		"""Called when a new dashboard has connected to this server."""
+		print(f"Connected to a new dashboard at {source}")

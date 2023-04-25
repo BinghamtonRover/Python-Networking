@@ -10,10 +10,10 @@ class UdpSocket:
 		self.socket.bind( ("0.0.0.0", port) )
 		self.socket.setblocking(0)
 
-	def send(self, data): 
-		if self.destination is None: 
-			raise ValueError("No destination specified")
-		self.socket.sendto(data, self.destination)
+	def send(self, data, destination=None): 
+		if destination is None: destination = self.destination
+		if destination is None: raise ValueError("No destination specified")
+		self.socket.sendto(data, destination)
 
 	def listen(self): 
 		print(f"Listening on port {self.port}")
