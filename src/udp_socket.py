@@ -8,7 +8,7 @@ class UdpSocket:
 		self.buffer = buffer
 		self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 		self.socket.bind( ("0.0.0.0", port) )
-		self.socket.setblocking(0)
+		self.socket.settimeout(0.1)
 
 	def send(self, data, destination=None): 
 		if destination is None: destination = self.destination
@@ -20,10 +20,10 @@ class UdpSocket:
 		try: 
 			while True:
 				try: data, source = self.socket.recvfrom(self.buffer)
-				except socket.error as error: 
+				except socket.timeout as error: pass
 					# 10035 indicates that there was no packet received. That's okay.
-					if error.errno == 10035: pass
-					else: raise error from None
+					# if error.errno == 10035: pass
+					# else: raise error from None
 				else: self.on_data(data, source)
 				finally: self.on_loop()
 		except KeyboardInterrupt as error: 
