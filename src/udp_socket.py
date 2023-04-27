@@ -26,7 +26,9 @@ class UdpSocket:
 					else: raise error from None
 				else: self.on_data(data, source)
 				finally: self.on_loop()
-		except KeyboardInterrupt: self.close()
+		except KeyboardInterrupt as error: 
+			self.close()
+			raise error from None
 
 	def close(self): 
 		self.socket.close()

@@ -56,7 +56,6 @@ class ProtoSocket(UdpSocket):
 		elif self.received_heartbeat: self.received_heartbeat = False
 		elif self.is_connected(): 
 			print("Heartbeat not received. Assuming Dashboard has disconnected")
-			self.destination = None
 			self.on_disconnect()
 		self.last_heartbeat_check = time.time()
 		
@@ -66,7 +65,8 @@ class ProtoSocket(UdpSocket):
 		Use this method to shut down anything that might be dangerous without a human operator. For 
 		example, the subsystems server should stop the drive system so the rover doesn't drive away.
 		"""
-		pass
+		self.send_message(Disconnect(sender=self.device))
+		self.destination = None
 
 	def on_data(self, data, source): 
 		"""Handles incoming data in Protobuf format.
