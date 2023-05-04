@@ -95,13 +95,9 @@ class ProtoSocket(UdpSocket):
 		"""
 		if heartbeat.receiver != self.device:  # (1)
 			print(f"Received a misaddressed heartbeat: {heartbeat}")
-			return
-
-		if self.is_connected():
-			if self.destination == source:  # (2)
-				self.send_heartbeat()
-			else:  # (3)
-				print(f"This server is still connected to {self.destination}, but got a heartbeat from {source[0]}")
+		elif self.is_connected():
+			if self.destination == source: self.send_heartbeat()  # (2)
+			else: print(f"This server is still connected to {self.destination}, but got a heartbeat from {source}")  # (3)
 		else:  # (4)
 			self.destination = source
 			self.on_connect(source)
