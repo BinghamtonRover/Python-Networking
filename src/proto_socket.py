@@ -117,6 +117,9 @@ class ProtoSocket(UdpSocket):
 		""" 
 		self.send_message(settings)
 		self.settings = settings
+		if self.settings.status == RoverStatus.POWER_OFF: 
+			print("Shutting down...")
+			os.system("sudo shutdown now")
 
 	def on_message(self, wrapper): 
 		"""Invoked when a generic command has been received.
