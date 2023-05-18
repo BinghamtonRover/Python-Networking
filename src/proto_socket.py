@@ -99,7 +99,6 @@ class ProtoSocket(UdpSocket):
 			if self.destination == source: self.send_heartbeat()  # (2)
 			else: print(f"This server is still connected to {self.destination}, but got a heartbeat from {source}")  # (3)
 		else:  # (4)
-			self.destination = source
 			self.on_connect(source)
 			self.send_heartbeat()
 
@@ -131,4 +130,5 @@ class ProtoSocket(UdpSocket):
 
 	def on_connect(self, source): 
 		"""Called when a new dashboard has connected to this server."""
+		self.destination = source	
 		print(f"Connected to a new dashboard at {source}")
