@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import gps_pb2 as gps__pb2
+from . import gps_pb2 as gps__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nmars.proto\x1a\tgps.proto\"M\n\x0bMarsCommand\x12\x0e\n\x06swivel\x18\x01 \x01(\x02\x12\x0c\n\x04tilt\x18\x02 \x01(\x02\x12 \n\x08position\x18\x03 \x01(\x0b\x32\x0e.RoverPosition\"(\n\x08MarsData\x12\x0e\n\x06swivel\x18\x01 \x01(\x02\x12\x0c\n\x04tilt\x18\x02 \x01(\x02\x62\x06proto3')
