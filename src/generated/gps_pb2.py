@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tgps.proto\"G\n\x0eGpsCoordinates\x12\x10\n\x08latitude\x18\x01 \x01(\x02\x12\x11\n\tlongitude\x18\x02 \x01(\x02\x12\x10\n\x08\x61ltitude\x18\x03 \x01(\x02\".\n\x0bOrientation\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"P\n\rRoverPosition\x12\x1c\n\x03gps\x18\x01 \x01(\x0b\x32\x0f.GpsCoordinates\x12!\n\x0borientation\x18\x02 \x01(\x0b\x32\x0c.Orientationb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tgps.proto\"G\n\x0eGpsCoordinates\x12\x10\n\x08latitude\x18\x01 \x01(\x02\x12\x11\n\tlongitude\x18\x02 \x01(\x02\x12\x10\n\x08\x61ltitude\x18\x03 \x01(\x02\".\n\x0bOrientation\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"w\n\rRoverPosition\x12\x1c\n\x03gps\x18\x01 \x01(\x0b\x32\x0f.GpsCoordinates\x12!\n\x0borientation\x18\x02 \x01(\x0b\x32\x0c.Orientation\x12%\n\x0c\x62\x61se_station\x18\x03 \x01(\x0b\x32\x0f.GpsCoordinatesb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'gps_pb2', globals())
@@ -25,5 +25,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _ORIENTATION._serialized_start=86
   _ORIENTATION._serialized_end=132
   _ROVERPOSITION._serialized_start=134
-  _ROVERPOSITION._serialized_end=214
+  _ROVERPOSITION._serialized_end=253
 # @@protoc_insertion_point(module_scope)
