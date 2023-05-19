@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from . import gps_pb2 as gps__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x61utonomy.proto\x1a\tgps.proto\"\xb3\x01\n\x0c\x41utonomyData\x12\x1d\n\x05state\x18\x01 \x01(\x0e\x32\x0e.AutonomyState\x12$\n\x0b\x64\x65stination\x18\x02 \x01(\x0b\x32\x0f.GpsCoordinates\x12\"\n\tobstacles\x18\x03 \x03(\x0b\x32\x0f.GpsCoordinates\x12\x1d\n\x04path\x18\x04 \x03(\x0b\x32\x0f.GpsCoordinates\x12\x1b\n\x04task\x18\x05 \x01(\x0e\x32\r.AutonomyTask\"d\n\x0f\x41utonomyCommand\x12\x0e\n\x06\x65nable\x18\x01 \x01(\x08\x12$\n\x0b\x64\x65stination\x18\x02 \x01(\x0b\x32\x0f.GpsCoordinates\x12\x1b\n\x04task\x18\x03 \x01(\x0e\x32\r.AutonomyTask*{\n\rAutonomyState\x12\x1c\n\x18\x41UTONOMY_STATE_UNDEFINED\x10\x00\x12\x0b\n\x07PATHING\x10\x02\x12\x0f\n\x0b\x41PPROACHING\x10\x03\x12\x12\n\x0e\x41T_DESTINATION\x10\x04\x12\x0b\n\x07\x44RIVING\x10\x05\x12\r\n\tSEARCHING\x10\x06*_\n\x0c\x41utonomyTask\x12\x1b\n\x17\x41UTONOMY_TASK_UNDEFINED\x10\x00\x12\x0c\n\x08GPS_ONLY\x10\x01\x12\x11\n\rVISUAL_MARKER\x10\x02\x12\x11\n\rBETWEEN_GATES\x10\x03\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x61utonomy.proto\x1a\tgps.proto\"\xb3\x01\n\x0c\x41utonomyData\x12\x1d\n\x05state\x18\x01 \x01(\x0e\x32\x0e.AutonomyState\x12$\n\x0b\x64\x65stination\x18\x02 \x01(\x0b\x32\x0f.GpsCoordinates\x12\"\n\tobstacles\x18\x03 \x03(\x0b\x32\x0f.GpsCoordinates\x12\x1d\n\x04path\x18\x04 \x03(\x0b\x32\x0f.GpsCoordinates\x12\x1b\n\x04task\x18\x05 \x01(\x0e\x32\r.AutonomyTask\"f\n\x0f\x41utonomyCommand\x12$\n\x0b\x64\x65stination\x18\x01 \x01(\x0b\x32\x0f.GpsCoordinates\x12\x1b\n\x04task\x18\x02 \x01(\x0e\x32\r.AutonomyTask\x12\x10\n\x08\x61ruco_id\x18\x03 \x01(\x05*{\n\rAutonomyState\x12\x1c\n\x18\x41UTONOMY_STATE_UNDEFINED\x10\x00\x12\x0b\n\x07PATHING\x10\x02\x12\x0f\n\x0b\x41PPROACHING\x10\x03\x12\x12\n\x0e\x41T_DESTINATION\x10\x04\x12\x0b\n\x07\x44RIVING\x10\x05\x12\r\n\tSEARCHING\x10\x06*_\n\x0c\x41utonomyTask\x12\x1b\n\x17\x41UTONOMY_TASK_UNDEFINED\x10\x00\x12\x0c\n\x08GPS_ONLY\x10\x01\x12\x11\n\rVISUAL_MARKER\x10\x02\x12\x11\n\rBETWEEN_GATES\x10\x03\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,12 +22,12 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'autonomy_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _globals['_AUTONOMYSTATE']._serialized_start=313
-  _globals['_AUTONOMYSTATE']._serialized_end=436
-  _globals['_AUTONOMYTASK']._serialized_start=438
-  _globals['_AUTONOMYTASK']._serialized_end=533
+  _globals['_AUTONOMYSTATE']._serialized_start=315
+  _globals['_AUTONOMYSTATE']._serialized_end=438
+  _globals['_AUTONOMYTASK']._serialized_start=440
+  _globals['_AUTONOMYTASK']._serialized_end=535
   _globals['_AUTONOMYDATA']._serialized_start=30
   _globals['_AUTONOMYDATA']._serialized_end=209
   _globals['_AUTONOMYCOMMAND']._serialized_start=211
-  _globals['_AUTONOMYCOMMAND']._serialized_end=311
+  _globals['_AUTONOMYCOMMAND']._serialized_end=313
 # @@protoc_insertion_point(module_scope)
