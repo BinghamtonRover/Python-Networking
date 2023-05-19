@@ -1,3 +1,4 @@
+import os
 import time
 
 from .udp_socket import UdpSocket
@@ -34,7 +35,7 @@ class ProtoSocket(UdpSocket):
 		self.device = device
 		self.received_heartbeat = False
 		self.last_heartbeat_check = time.time()
-		self.settings = None
+		self.settings = UpdateSetting(status=RoverStatus.MANUAL).SerializeToString()
 		self.destination = destination
 		super().__init__(port, destination, buffer=buffer)
 
@@ -80,6 +81,7 @@ class ProtoSocket(UdpSocket):
 			heartbeat = Connect.FromString(wrapper.data)
 			self.on_heartbeat(heartbeat, source)
 		elif wrapper.name == UpdateSetting.DESCRIPTOR.name:  # (2) 
+			self.settings = wrapper.data
 			settings = UpdateSetting.FromString(wrapper.data)
 			self.update_settings(settings)
 		else:  # (3)
@@ -115,8 +117,7 @@ class ProtoSocket(UdpSocket):
 		making the requested change. That way, the dashboard can perform sanity checks and warn the user.
 		""" 
 		self.send_message(settings)
-		self.settings = settings
-		if self.settings.status == RoverStatus.POWER_OFF: 
+		if settings.status == RoverStatus.POWER_OFF: 
 			print("Shutting down...")
 			os.system("sudo shutdown now")
 
