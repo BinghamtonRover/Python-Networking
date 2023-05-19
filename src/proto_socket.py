@@ -5,7 +5,7 @@ from .udp_socket import UdpSocket
 from .generated.wrapper_pb2 import *
 from .generated.core_pb2 import *
 
-heartbeat_interval = 1
+heartbeat_interval = 2
 
 class ProtoSocket(UdpSocket): 
 	"""A UDP socket that handles incoming data in Protobuf format.
