@@ -132,4 +132,4 @@ class ProtoSocket(UdpSocket):
 	def on_connect(self, source): 
 		"""Called when a new dashboard has connected to this server."""
 		self.destination = source	
-		print(f"Connected to a new dashboard at {source}")
+		print(f"Port {self.port} is connected to a new dashboard at {source}")
