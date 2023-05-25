@@ -24,7 +24,7 @@ class ServerThread(threading.Thread):
 			try: self.server.listen()
 			except KeyboardInterrupt: break
 			except OSError as error: 
-				if error.errno in [10054, 101, 10038]: continue
+				if error.errno in [10054, 101, 10038, 9]: continue
 				else: raise error
 
 	def close(self): 
