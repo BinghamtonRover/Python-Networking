@@ -31,18 +31,20 @@ class ProtoSocket(UdpSocket):
 	the [Connect] handshake allows the dashboard to inform the rover about its IP address, which it
 	then saves and subsequently uses to send messages to the dashboard.
 	"""
-	def __init__(self, port, device, destination = None, buffer=1024):
+	def __init__(self, port, device, destination = None, buffer=1024, send_heartbeats=True):
 		self.device = device
 		self.received_heartbeat = False
 		self.last_heartbeat_check = time.time()
 		self.settings = UpdateSetting(status=RoverStatus.MANUAL).SerializeToString()
 		self.destination = destination
+		self.send_heartbeats = send_heartbeats
 		super().__init__(port, destination, buffer=buffer)
 
 	def is_connected(self): return self.destination is not None
 
 	def send_message(self, message, destination=None):
 		"""Wraps a message and sends it to [destination]."""
+		if not self.is_connected(): return
 		wrapper = WrappedMessage(name=message.DESCRIPTOR.name, data=message.SerializeToString())
 		self.send(wrapper.SerializeToString(), destination=destination)
 
@@ -52,6 +54,7 @@ class ProtoSocket(UdpSocket):
 		If a dashboard had previously connected to this server but failed to send a heartbeat message,
 		then this invokes [on_disconnect] to warn the server that the dashboard has disconnected.
 		"""
+		if not self.send_heartbeats: return
 		now = time.time()
 		if (now - self.last_heartbeat_check < heartbeat_interval): return
 		elif self.received_heartbeat: self.received_heartbeat = False
