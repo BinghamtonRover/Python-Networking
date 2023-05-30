@@ -1,8 +1,10 @@
 import socket
 import time
+import threading
 
-class UdpSocket: 
+class UdpSocket(threading.Thread): 
 	def __init__(self, port, destination=None, buffer=1024): 
+		super().__init__()
 		self.port = port
 		self.destination = destination
 		self.buffer = buffer
@@ -16,20 +18,23 @@ class UdpSocket:
 		if destination is None: raise ValueError("No destination specified")
 		self.socket.sendto(data, destination)
 
-	def listen(self): 
+	def run(self): 
 		print(f"Listening on port {self.port}")
-		try: 
-			while True:
-				if not self.keep_alive: return self.close()
-				try: data, source = self.socket.recvfrom(self.buffer)
-				except socket.timeout as error: pass
-				else: self.on_data(data, source)
-				finally: self.on_loop()
-		except KeyboardInterrupt as error: 
-			self.close()
-			raise error from None
+		while self.keep_alive:
+			try: 
+				data, source = self.socket.recvfrom(self.buffer)
+				self.on_data(data, source)
+				# Remove this line once heartbeats are threaded
+				self.on_loop()
+			except socket.timeout as error: pass
+			except OSError as error:
+				if error.errno in [10054, 101, 10038]: continue
+				else: raise error
 
 	def close(self): 
+		self.keep_alive = False
+
+	def close_socket(self): 
 		self.socket.close()
 		print(f"Closed the socket on port {self.port}")
 
