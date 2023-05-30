@@ -28,7 +28,7 @@ class UdpSocket(threading.Thread):
 				self.on_loop()
 			except socket.timeout as error: pass
 			except OSError as error:
-				if error.errno in [10054, 101, 10038]: continue
+				if error.errno in [10054, 101, 10038, 9]: continue
 				else: raise error
 
 	def close(self): 
