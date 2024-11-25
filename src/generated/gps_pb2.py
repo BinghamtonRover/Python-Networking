@@ -11,7 +11,7 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-import version_pb2 as version__pb2
+from . import version_pb2 as version__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tgps.proto\x1a\rversion.proto\"G\n\x0eGpsCoordinates\x12\x10\n\x08latitude\x18\x01 \x01(\x02\x12\x11\n\tlongitude\x18\x02 \x01(\x02\x12\x10\n\x08\x61ltitude\x18\x03 \x01(\x02\".\n\x0bOrientation\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"k\n\rRoverPosition\x12\x1c\n\x03gps\x18\x01 \x01(\x0b\x32\x0f.GpsCoordinates\x12!\n\x0borientation\x18\x02 \x01(\x0b\x32\x0c.Orientation\x12\x19\n\x07version\x18\x03 \x01(\x0b\x32\x08.Versionb\x06proto3')
