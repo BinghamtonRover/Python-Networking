@@ -22,9 +22,9 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-import gps_pb2 as gps__pb2
-import motor_pb2 as motor__pb2
-import version_pb2 as version__pb2
+from . import gps_pb2 as gps__pb2
+from . import motor_pb2 as motor__pb2
+from . import version_pb2 as version__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x62\x61se_station.proto\x1a\tgps.proto\x1a\x0bmotor.proto\x1a\rversion.proto\"s\n\x16\x41ntennaFirmwareCommand\x12\x19\n\x07version\x18\x01 \x01(\x0b\x32\x08.Version\x12\x1d\n\x06swivel\x18\x02 \x01(\x0b\x32\r.MotorCommand\x12\x0c\n\x04stop\x18\x03 \x01(\x08\x12\x11\n\tcalibrate\x18\x04 \x01(\x08\"L\n\x13\x41ntennaFirmwareData\x12\x19\n\x07version\x18\x01 \x01(\x0b\x32\x08.Version\x12\x1a\n\x06swivel\x18\x02 \x01(\x0b\x32\n.MotorData\"\xa1\x02\n\x12\x42\x61seStationCommand\x12\x19\n\x07version\x18\x01 \x01(\x0b\x32\x08.Version\x12!\n\x04mode\x18\x02 \x01(\x0e\x32\x13.AntennaControlMode\x12)\n\x10roverCoordinates\x18\x03 \x01(\x0b\x32\x0f.GpsCoordinates\x12\x37\n\x1e\x62\x61seStationCoordinatesOverride\x18\x04 \x01(\x0b\x32\x0f.GpsCoordinates\x12\x39\n roverCoordinatesOverrideOverride\x18\x05 \x01(\x0b\x32\x0f.GpsCoordinates\x12.\n\rmanualCommand\x18\x06 \x01(\x0b\x32\x17.AntennaFirmwareCommand\"\xa7\x01\n\x0f\x42\x61seStationData\x12\x19\n\x07version\x18\x01 \x01(\x0b\x32\x08.Version\x12!\n\x04mode\x18\x02 \x01(\x0e\x32\x13.AntennaControlMode\x12%\n\x07\x61ntenna\x18\x03 \x01(\x0b\x32\x14.AntennaFirmwareData\x12/\n\x16\x62\x61seStationCoordinates\x18\x04 \x01(\x0b\x32\x0f.GpsCoordinates*]\n\x12\x41ntennaControlMode\x12\"\n\x1e\x41NTENNA_CONTROL_MODE_UNDEFINED\x10\x00\x12\x0f\n\x0bTRACK_ROVER\x10\x01\x12\x12\n\x0eMANUAL_CONTROL\x10\x02\x62\x06proto3')
