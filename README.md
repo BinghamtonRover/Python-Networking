@@ -5,13 +5,22 @@ There is no lib folder here as this code is meant to be added as a Git submodule
 
 To generate Protobuf files:
 ```bash
-mkdir generated  # if needed
-protoc --python_out=generated Protobuf/*.proto
+python Protobuf\gen-python -p *
 ```
+
+Due to [an unresolved bug in `protoc`](https://github.com/protocolbuffers/protobuf/issues/1491),
+the output from these files will not work out of the box. Using an IDE or CLI tool, perform the
+following find and replace with RegEx enabled:
+
+- Directory: src/generated/
+- Find: `import (\w+)_pb2 as .+`
+- Replace: `from . import $1_pb2 as $1__pb2`
+
+This replaces all instances of `import xxx as yyy` with `from . import xxx as yyy`.
 
 ## Importing files
 
-Always treat imports as starting from the top-level directory, _not_ this submodule. For example: 
+Always treat imports as starting from the top-level directory, _not_ this submodule. For example:
 ```
 bin/
 lib/
@@ -24,11 +33,5 @@ lib/
 To import a file in `src`:
 ```py
 from lib.network import UdpClient
+from lib.network.generated import Device
 ```
-
-Imports rely on `__init__.py` spelling out every single file to import. Since this is annoying for generated files, you must import Protobuf files directly:
-```py
-from lib.network.generated.Protobuf.wrapper_pb2 import WrappedMessage
-```
-
-The Protobuf files must be in `generated/Protobuf`, not `generated`, due to the `protoc` compiler using absolute imports, not relative imports.
