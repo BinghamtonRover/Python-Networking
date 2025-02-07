@@ -8,17 +8,16 @@ class UdpSocket:
       await asyncio.Event().wait()
     finally:
       return self.close()
-      return
 
   async def create(port, device, destination = None):
     loop = asyncio.get_running_loop()
-    transport, protocol = await loop.create_datagram_endpoint(
-      lambda: UdpSocket(port, device, destination), local_addr=("127.0.0.1", port)
+    _, protocol = await loop.create_datagram_endpoint(
+      lambda: UdpSocket(port, device, destination),
+      local_addr=("0.0.0.0", port)
     )
     return protocol
 
   def __init__(self, port, device, destination = None):
-    print("Creating object")
     self.port = port
     self.device = device
     self.destination = destination
@@ -41,7 +40,7 @@ class UdpSocket:
       heartbeat = Connect()
       heartbeat.ParseFromString(wrapper.data)
       response = Connect(sender=heartbeat.receiver, receiver=heartbeat.sender)
-      self.send_message(heartbeat)
+      self.send_message(response)
     elif wrapper.name not in self.handlers:
       print(f"Socket {self.port} received a {wrapper.name} message and doesn't have a handler for it")
       return
@@ -71,4 +70,4 @@ class UdpSocket:
   def send_message(self, message, destination = None):
     name = message.DESCRIPTOR.name
     wrapper = WrappedMessage(data=message.SerializeToString(), name=name)
-    self.send_wrapper(wrapper)
+    self.send_wrapper(wrapper, destination=destination)
